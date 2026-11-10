@@ -33,8 +33,8 @@
             <!-- Loop through loans and display each loan -->
             {% for loan in loans %}
                 <tr>
-                    <td>{{ loan.customer_name | safe }}</td>
-                    <td>{{ loan.book_name | safe }}</td>
+                    <td>{{ loan.customer_name }}</td>
+                    <td>{{ loan.book_name }}</td>
                     <td>{{ loan.loan_date }}</td>
                     <td>{{ loan.return_date }}</td>
                     <td>

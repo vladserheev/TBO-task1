@@ -1,4 +1,5 @@
 from flask import render_template, Blueprint, request, redirect, url_for, jsonify
+from markupsafe import escape
 from project import db
 from project.books.models import Book
 from project.books.forms import CreateBook
@@ -6,6 +7,10 @@ from project.books.forms import CreateBook
 
 # Blueprint for books
 books = Blueprint('books', __name__, template_folder='templates', url_prefix='/books')
+
+
+# Allowed values of book_type
+ALLOWED_BOOK_TYPES = {'2days', '5days', '10days'}
 
 
 # Route to display books in HTML
@@ -32,7 +37,15 @@ def list_books_json():
 def create_book():
     data = request.get_json()
 
-    new_book = Book(name=data['name'], author=data['author'], year_published=data['year_published'], book_type=data['book_type'])
+    # Validate numeric/enumerated fields; escape text fields to prevent XSS
+    try:
+        year_published = int(data['year_published'])
+    except (ValueError, TypeError):
+        return jsonify({'error': 'year_published must be a number'}), 400
+    if data['book_type'] not in ALLOWED_BOOK_TYPES:
+        return jsonify({'error': 'Invalid book_type'}), 400
+
+    new_book = Book(name=str(escape(data['name'])), author=str(escape(data['author'])), year_published=year_published, book_type=data['book_type'])
 
     try:
         # Add the new book to the session and commit to save to the database
@@ -63,10 +76,16 @@ def edit_book(book_id):
         data = request.get_json()
         
         # Update book details
-        book.name = data.get('name', book.name)  # Update if data exists, otherwise keep the same
-        book.author = data.get('author', book.author)
-        book.year_published = data.get('year_published', book.year_published)
-        book.book_type = data.get('book_type', book.book_type)
+        if 'name' in data:
+            book.name = str(escape(data['name']))
+        if 'author' in data:
+            book.author = str(escape(data['author']))
+        if 'year_published' in data:
+            book.year_published = int(data['year_published'])
+        if 'book_type' in data:
+            if data['book_type'] not in ALLOWED_BOOK_TYPES:
+                return jsonify({'error': 'Invalid book_type'}), 400
+            book.book_type = data['book_type']
         
         # Commit the changes to the database
         db.session.commit()

@@ -62,11 +62,17 @@ def create_loan():
             print('Error. Book not available for loan.')
             return jsonify({'error': 'Book not available for loan.'}), 400
 
+        # Only existing customers are accepted (prevents storing arbitrary HTML/JS)
+        customer = Customer.query.filter_by(name=customer_name).first()
+        if not customer:
+            print('Error. Customer not found.')
+            return jsonify({'error': 'Customer not found.'}), 400
+
         try:
             # Create a new loan and store original book details
             new_loan = Loan(
-                customer_name=customer_name,
-                book_name=book_name,
+                customer_name=customer.name,  # values taken from the database (already escaped)
+                book_name=book.name,
                 loan_date=loan_date,
                 return_date=return_date,
                 original_author=book.author,
