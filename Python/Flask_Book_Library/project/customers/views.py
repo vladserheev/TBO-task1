@@ -1,6 +1,7 @@
 from flask import render_template, Blueprint, request, redirect, url_for, jsonify
 from project import db
 from project.customers.models import Customer
+from project.customers.validators import validate_customer
 
 
 # Blueprint for customers
@@ -35,7 +36,14 @@ def create_customer():
         print('Invalid form data')
         return jsonify({'error': 'Invalid form data'}), 400
 
-    new_customer = Customer(name=data['name'], city=data['city'], age=data['age'])
+    # Validate input at object creation (reject anything that is not a plain name/city/age)
+    try:
+        name, city, age = validate_customer(data['name'], data['city'], data['age'])
+    except ValueError as e:
+        print('Invalid customer data:', e)
+        return jsonify({'error': str(e)}), 400
+
+    new_customer = Customer(name=name, city=city, age=age)
 
     try:
         # Add the new customer to the session and commit to save to the database
@@ -85,9 +93,7 @@ def edit_customer(customer_id):
         data = request.form
 
         # Update customer details
-        customer.name = data['name']
-        customer.city = data['city']
-        customer.age = data['age']
+        customer.name, customer.city, customer.age = validate_customer(data['name'], data['city'], data['age'])
 
         # Commit the changes to the database
         db.session.commit()
