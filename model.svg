@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="560" viewBox="0 0 1000 560" font-family="Arial, Helvetica, sans-serif" font-size="13">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#333"/>
+    </marker>
+  </defs>
+  <rect width="1000" height="560" fill="#ffffff"/>
+
+  <!-- Bounded contexts -->
+  <rect x="20" y="40" width="280" height="440" rx="10" fill="#f3f8ff" stroke="#4a78c2" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="160" y="30" text-anchor="middle" font-weight="bold" font-size="15" fill="#2a4f8f">Uwierzytelnienie</text>
+
+  <rect x="330" y="40" width="360" height="500" rx="10" fill="#f4fbf4" stroke="#3f9142" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="510" y="30" text-anchor="middle" font-weight="bold" font-size="15" fill="#2c6a2f">Konto (Zarządzanie Kontem)</text>
+
+  <rect x="720" y="40" width="260" height="440" rx="10" fill="#fff8f0" stroke="#d17a1f" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="850" y="30" text-anchor="middle" font-weight="bold" font-size="15" fill="#9a560f">Przelewy</text>
+
+  <!-- Uzytkownik -->
+  <rect x="40" y="90" width="240" height="230" rx="6" fill="#ffffff" stroke="#333" stroke-width="1.5"/>
+  <rect x="40" y="90" width="240" height="44" rx="6" fill="#dbe8fb" stroke="#333" stroke-width="1.5"/>
+  <text x="160" y="108" text-anchor="middle" font-size="11" fill="#555">&lt;&lt;Aggregate Root / Entity&gt;&gt;</text>
+  <text x="160" y="125" text-anchor="middle" font-weight="bold" font-size="15">Użytkownik</text>
+  <text x="52" y="156">id : UUID</text>
+  <text x="52" y="176">email : Email (VO)</text>
+  <text x="52" y="196">hasloHash : String</text>
+  <text x="52" y="216">status : Status (VO)</text>
+  <text x="52" y="236">nieudanePróby : int</text>
+  <text x="52" y="256">klientId : UUID</text>
+  <text x="52" y="282" font-style="italic">+ zaloguj()</text>
+  <text x="52" y="302" font-style="italic">+ wyloguj()</text>
+
+  <!-- KontoBankowe -->
+  <rect x="350" y="90" width="320" height="230" rx="6" fill="#ffffff" stroke="#333" stroke-width="1.5"/>
+  <rect x="350" y="90" width="320" height="44" rx="6" fill="#d9f0da" stroke="#333" stroke-width="1.5"/>
+  <text x="510" y="108" text-anchor="middle" font-size="11" fill="#555">&lt;&lt;Aggregate Root / Entity&gt;&gt;</text>
+  <text x="510" y="125" text-anchor="middle" font-weight="bold" font-size="15">KontoBankowe</text>
+  <text x="362" y="156">numerKonta : NumerKonta (VO) — ID</text>
+  <text x="362" y="176">saldo : Kwota (VO)</text>
+  <text x="362" y="196">status : Status (VO)</text>
+  <text x="362" y="216">klientId : UUID</text>
+  <text x="362" y="244" font-style="italic">+ obciaz(kwota)</text>
+  <text x="362" y="264" font-style="italic">+ uznaj(kwota)</text>
+  <text x="362" y="292" font-size="12" fill="#a33">inwariant: saldo ≥ 0</text>
+
+  <!-- Klient -->
+  <rect x="350" y="350" width="320" height="170" rx="6" fill="#ffffff" stroke="#333" stroke-width="1.5"/>
+  <rect x="350" y="350" width="320" height="44" rx="6" fill="#d9f0da" stroke="#333" stroke-width="1.5"/>
+  <text x="510" y="368" text-anchor="middle" font-size="11" fill="#555">&lt;&lt;Aggregate Root / Entity&gt;&gt;</text>
+  <text x="510" y="385" text-anchor="middle" font-weight="bold" font-size="15">Klient</text>
+  <text x="362" y="416">id : UUID</text>
+  <text x="362" y="436">imię, nazwisko : String</text>
+  <text x="362" y="456">pesel : PESEL (VO)</text>
+  <text x="362" y="476">adres : Adres (VO)</text>
+
+  <!-- Przelew -->
+  <rect x="740" y="90" width="220" height="250" rx="6" fill="#ffffff" stroke="#333" stroke-width="1.5"/>
+  <rect x="740" y="90" width="220" height="44" rx="6" fill="#fde5c8" stroke="#333" stroke-width="1.5"/>
+  <text x="850" y="108" text-anchor="middle" font-size="11" fill="#555">&lt;&lt;Aggregate Root / Entity&gt;&gt;</text>
+  <text x="850" y="125" text-anchor="middle" font-weight="bold" font-size="15">Przelew</text>
+  <text x="752" y="156">id : UUID</text>
+  <text x="752" y="176">kontoNadawcy : NumerKonta</text>
+  <text x="752" y="196">kontoOdbiorcy : NumerKonta</text>
+  <text x="752" y="216">kwota : Kwota (VO)</text>
+  <text x="752" y="236">prowizja : Kwota (VO)</text>
+  <text x="752" y="256">status : Status (VO)</text>
+  <text x="752" y="276">dataUtworzenia : DateTime</text>
+  <text x="752" y="304" font-style="italic">+ zrealizuj()</text>
+  <text x="752" y="324" font-style="italic">+ odrzuc()</text>
+
+  <!-- Relations (by ID) -->
+  <path d="M280,256 L315,256 L315,435 L350,435" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#a)"/>
+  <text x="318" y="250" font-size="11" fill="#333">klientId</text>
+
+  <path d="M510,320 L510,350" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#a)"/>
+  <text x="518" y="340" font-size="11" fill="#333">klientId</text>
+
+  <path d="M740,200 L670,200" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#a)"/>
+  <text x="705" y="190" text-anchor="middle" font-size="11" fill="#333">ID konta</text>
+
+  <!-- Legend -->
+  <text x="720" y="510" font-size="12" fill="#333">Linia przerywana = odwołanie po ID (nie po obiekcie)</text>
+  <text x="720" y="528" font-size="12" fill="#333">VO = Value Object, Przelew → Konto: obciaz / uznaj</text>
+</svg>
